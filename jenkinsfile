@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+    stages {
+        stage ('GIT'){
+            steps {
+                git branch: 'main', credentialsId: 'GithubToken', 
+                url: 'https://github.com/Dhekra-Ben-Sghaier/GestionAchat-FrontEnd.git'
+            }
+        }
+        
+         stage ('Build'){
+            steps {
+               
+              //ansiblePlaybook credentialsId: 'private-key', disableHostKeyChecking: true, installation: 'ansible', inventory: 'ansible/inventory/host.yml', playbook: 'ansible/build.yml'
+                //sh 'ansible-playbook -vvv ansible/build.yml -i ansible/inventory/host.yml --become -e "ansible_become_password=dhekra"'
+                //-e "ansible_become_password=dhekra" DEFAULT_KEEP_REMOTE_FILES=yes
+                //ansiblePlaybook become: true, credentialsId: 'private-key', disableHostKeyChecking: true, extras: '-e "ansible_become_password=dhekra"', installation: 'ansible', inventory: 'ansible/inventory/host.yml', playbook: 'ansible/build.yml'
+            
+                echo 'build'
+            }
+        }
+        
+         stage ('Docker'){
+            steps {
+                echo 'docker'
+             //sh 'ansible-playbook ansible/docker.yml -i ansible/inventory/host.yml --become -e "ansible_become_password=dhekra"'
+                
+            }
+        }
+        
+         stage ('Dockerhub'){
+            steps {
+             sh 'ansible-playbook ansible/docker-registry.yml -i ansible/inventory/host.yml --become -e "ansible_become_password=dhekra"'
+                
+            }
+        }
+        
+       
+    
+    }
+    
+       
+    
+    
+    
+    
+}
